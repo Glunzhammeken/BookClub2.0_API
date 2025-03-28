@@ -1,0 +1,6 @@
+@BookClub2._0_API_HostAddress = http://localhost:5279
+
+GET {{BookClub2._0_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
