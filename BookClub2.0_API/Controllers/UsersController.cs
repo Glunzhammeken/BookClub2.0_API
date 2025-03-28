@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Xml.Linq;
 using BookClub2._0_API.Records;
+using Microsoft.AspNetCore.Cors;
 
 
 namespace BookClub2._0_API.Controllers
@@ -42,11 +43,20 @@ namespace BookClub2._0_API.Controllers
             return NoContent();
         }
 
-        // GET api/<UsersController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        // GET api/<ActorsController>/5
+
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<User> Get(int id)
         {
-            return "value";
+            User? user = _userRepository.GetUserById(id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            return NoContent();
         }
 
         // POST api/<UsersController>
@@ -75,16 +85,52 @@ namespace BookClub2._0_API.Controllers
             }
         }
 
-        // PUT api/<UsersController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // PUT api/<ActorsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<User> Put(int id, [FromBody] UserRecord NewUserRecord)
         {
+            try
+            {
+                User userConverted = Recordhelper.ConvertUserRecord(NewUserRecord);
+                User? updated = _userRepository.UpdateUser(id, userConverted);
+
+                if (updated != null)
+                {
+                    return Ok(updated);
+                }
+                return NotFound();
+
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest("Indeholder nulls" + ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest("Out of range" + ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest("" + ex.Message);
+            }
         }
 
-        // DELETE api/<UsersController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // DELETE api/<ActorsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<User> Delete(int id)
         {
+            User deleted = _userRepository.Remove(id);
+            if (deleted != null)
+            {
+                return Ok(deleted);
+
+            }
+            return NotFound();
         }
     }
 }
