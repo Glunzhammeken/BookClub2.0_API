@@ -4,13 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookClub2._0.Repositories;
 using BookClub2._0.Models;
-using BookClub2._0;
 using BookClub2._0.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
-using System.Numerics;
-using System.Xml.Linq;
 using BookClub2._0_API.Records;
 using Microsoft.AspNetCore.Cors;
 
