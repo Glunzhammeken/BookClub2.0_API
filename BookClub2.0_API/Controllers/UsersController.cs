@@ -41,19 +41,21 @@ namespace BookClub2._0_API.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-
-        // GET api/<ActorsController>/5
-
+        
         [HttpGet("{id}")]
         public ActionResult<User> Get(int id)
         {
-            User? user = _userRepository.GetUserById(id);
-            if (user != null)
-            {
-                return Ok(user);
-            }
-            return NoContent();
+            
+                User? user = _userRepository.GetUserById(id);
+
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                return NoContent();
         }
+           
+        
 
         // POST api/<UsersController>
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -113,20 +115,26 @@ namespace BookClub2._0_API.Controllers
                 return BadRequest("" + ex.Message);
             }
         }
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        // DELETE api/<ActorsController>/5
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]
         public ActionResult<User> Delete(int id)
         {
-            User deleted = _userRepository.Remove(id);
-            if (deleted != null)
+            try
             {
-                return Ok(deleted);
-
+                User deleted = _userRepository.Remove(id);
+                if (deleted != null)
+                {
+                    return Ok(deleted);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (ArgumentNullException ex)
+            {
+                return NotFound("An error occurred: " + ex.Message);
+            }
         }
+
     }
 }
