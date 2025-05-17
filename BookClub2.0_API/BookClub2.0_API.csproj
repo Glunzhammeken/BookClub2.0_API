@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="BookClub2.0">
       <HintPath>..\..\BookClub2.0\BookClub2.0\bin\Debug\net8.0\BookClub2.0.dll</HintPath>
     </Reference>

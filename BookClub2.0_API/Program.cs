@@ -4,6 +4,8 @@ using BookClub2._0;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true; // Optional: for better readability
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -29,6 +37,7 @@ builder.Services.AddDbContext<BookClubDbContext>(options =>
 
 // ?? Registrér repository (bruger `IRepository` interfacet)
 builder.Services.AddScoped<IRepository, UserRepository>();
+builder.Services.AddScoped<IBookClubRepository, BookClubRepository>();
 
 var app = builder.Build();
 
