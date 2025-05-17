@@ -36,7 +36,7 @@ builder.Services.AddDbContext<BookClubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ?? Registrér repository (bruger `IRepository` interfacet)
-builder.Services.AddScoped<IRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBookClubRepository, BookClubRepository>();
 
 var app = builder.Build();
