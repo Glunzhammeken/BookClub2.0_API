@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 namespace BookClub2._0_API.Controllers
 {
     [Route("api/[controller]")]
@@ -33,14 +34,25 @@ namespace BookClub2._0_API.Controllers
         public IActionResult Login([FromBody] LoginRequest req)
         {
             var user = _userRepository.GetUserByEmail(req.Email);
-            if (user == null ||req.Password != user.PasswordHash)
+            if (user == null)
+                return Unauthorized("Forkert email eller password");
+
+            var hashedInput = HashPassword(req.Password);
+            if (hashedInput != user.PasswordHash)
                 return Unauthorized("Forkert email eller password");
 
             // Generér JWT-token og returnér det
             var token = GenerateJwtToken(user);
             return Ok(new { token });
         }
-
+        private string HashPassword(string password)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashedBytes);
+            }
+        }
         private string GenerateJwtToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YOUR_SECRET_KEY_HERE")); // Skift til en stærk hemmelighed!
@@ -64,36 +76,6 @@ namespace BookClub2._0_API.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        // GET: api/<AuthController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<AuthController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<AuthController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AuthController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AuthController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+       
     }
 }
