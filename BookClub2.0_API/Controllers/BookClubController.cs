@@ -17,8 +17,8 @@ namespace BookClub2._0_API.Controllers
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubRepository _bookClubRepository;
-        private readonly IRepository _userRepository;
-        public BookClubController(IBookClubRepository bookClubRepository, IRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        public BookClubController(IBookClubRepository bookClubRepository, IUserRepository userRepository)
         {
             _bookClubRepository = bookClubRepository;
             _userRepository = userRepository;
